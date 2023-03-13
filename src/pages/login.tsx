@@ -1,7 +1,79 @@
-import React from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { object, string, TypeOf } from 'zod'
 
-const login = () => {
-  return <div>login</div>
+const createSessionSchema = object({
+  email: string().email('Not a valid email').nonempty({
+    message: 'Email is required',
+  }),
+  password: string().min(6, 'Password too short - should be 6 chars. minimum').nonempty({
+    message: 'Password is required',
+  }),
+})
+
+type CreateSessionInput = TypeOf<typeof createSessionSchema>
+
+const LoginPage = () => {
+  const router = useRouter()
+  const [loginError, setLoginError] = useState(null)
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<CreateSessionInput>({
+    resolver: zodResolver(createSessionSchema),
+  })
+
+  const onSubmit = async (values: CreateSessionInput) => {
+    console.log('form values', values)
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/sessions`, values, {
+        withCredentials: true, // cookies tokens
+      })
+      router.push('/')
+    } catch (error) {
+      console.log('onSubmit error', error)
+      // onSubmit error AxiosError {message: 'Unsupported protocol localhost:', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, stack: 'AxiosError: Unsupported protocol localhost:\n    at…dules/react-hook-form/dist/index.esm.mjs:2028:19)'}
+      setLoginError(error.message) // ! 'error' is of type 'unknown'.ts(18046)
+      // ! offline server -> Unsupported protocol localhost: // Network Error // Request failed with status code 400
+    }
+  }
+
+  console.log('errors', errors)
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {loginError && (
+          <p style={{ textAlign: 'center', marginBottom: '0.75rem' }}>{loginError}</p>
+        )}
+        <div className='form-element'>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            placeholder='jane.doe@example.com'
+            {...register('email')}
+          />
+          <p>{errors.email?.message}</p>
+        </div>
+        <div className='form-element'>
+          <label htmlFor='password'>Password</label>
+          <input
+            type='password'
+            id='password'
+            placeholder='******'
+            {...register('password')}
+          />
+          <p>{errors.password?.message}</p>
+        </div>
+        <button type='submit'>Submit</button>
+      </form>
+    </>
+  )
 }
 
-export default login
+export default LoginPage

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { object, string, TypeOf } from 'zod'
@@ -29,6 +30,7 @@ const createUserSchema = object({
 type CreateUserInput = TypeOf<typeof createUserSchema>
 
 const RegisterPage = () => {
+  const router = useRouter()
   const [registrationError, setRegistrationError] = useState(null)
   const {
     register,
@@ -42,6 +44,7 @@ const RegisterPage = () => {
     console.log('form values', values)
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, values)
+      router.push('/')
     } catch (error) {
       console.log('onSubmit error', error)
       // onSubmit error AxiosError {message: 'Unsupported protocol localhost:', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, stack: 'AxiosError: Unsupported protocol localhost:\n    at…dules/react-hook-form/dist/index.esm.mjs:2028:19)'}
