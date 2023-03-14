@@ -97,16 +97,21 @@ const Home: NextPage<{ fallbackData: User }> = ({ fallbackData }) => {
               gap: '1rem',
             }}
           >
-            <Link href='/login'>Login</Link>
-            <Link href='/register'>Register</Link>
+            <Link href='/login' className='login-link'>
+              Login
+            </Link>
+            <Link href='/register' className='login-link'>
+              Register
+            </Link>
           </div>
           <a
             href={getGoogleOAuthURL()}
-            style={{
-              backgroundColor: '#8d22b7',
-              padding: '0.7rem',
-              borderRadius: '8px',
-            }}
+            // style={{
+            //   backgroundColor: '#8d22b7',
+            //   padding: '0.7rem',
+            //   borderRadius: '8px',
+            // }}
+            className='link-google-login'
           >
             Login with Google
           </a>
