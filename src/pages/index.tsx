@@ -2,6 +2,7 @@
 // const inter = Inter({ subsets: ['latin'] })
 import styles from '@/styles/Home.module.css'
 import fetcher from '@/utils/fetcher'
+import getGoogleOAuthURL from '@/utils/getGoogleUrl'
 import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -39,14 +40,27 @@ const Home: NextPage<{ fallbackData: User }> = ({ fallbackData }) => {
 
   if (data) {
     return (
-      <h2
+      <main
         style={{
-          color: '#fc4e77',
+          padding: '2rem',
+          // display: 'flex',
+          // flexDirection: 'column',
+          // alignItems: 'center',
+          // gap: '1rem',
         }}
       >
-        Welcome <span style={{ color: 'white' }}>{data.name}</span>, you are logged in
-        <div style={{ marginTop: '2rem' }}>{JSON.stringify(data)}</div>
-      </h2>
+        <h2
+          style={{
+            color: '#fc4e77',
+            textAlign: 'center',
+          }}
+        >
+          Welcome <span style={{ color: 'white' }}>{data.name}</span>, you are logged in
+        </h2>
+        <div style={{ marginTop: '2rem', wordWrap: 'break-word' }}>
+          {JSON.stringify(data)}
+        </div>
+      </main>
     )
   }
 
@@ -71,18 +85,31 @@ const Home: NextPage<{ fallbackData: User }> = ({ fallbackData }) => {
         <h2
           style={{
             color: '#fc4e77',
+            marginTop: '1rem',
           }}
         >
           Please login
         </h2>
-        <div
-          style={{
-            display: 'flex',
-            gap: '1rem',
-          }}
-        >
-          <Link href='/login'>Login</Link>
-          <Link href='/register'>Register</Link>
+        <div className='login-options'>
+          <div
+            style={{
+              display: 'flex',
+              gap: '1rem',
+            }}
+          >
+            <Link href='/login'>Login</Link>
+            <Link href='/register'>Register</Link>
+          </div>
+          <a
+            href={getGoogleOAuthURL()}
+            style={{
+              backgroundColor: '#8d22b7',
+              padding: '0.7rem',
+              borderRadius: '8px',
+            }}
+          >
+            Login with Google
+          </a>
         </div>
       </main>
     </>
