@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -45,7 +46,14 @@ const LoginPage = () => {
   console.log('errors', errors)
 
   return (
-    <>
+    <div
+      style={{
+        padding: '2rem',
+      }}
+    >
+      <Link href='/' style={{ display: 'inline' }}>
+        Home
+      </Link>
       <form onSubmit={handleSubmit(onSubmit)}>
         {loginError && (
           <p style={{ textAlign: 'center', marginBottom: '0.75rem' }}>{loginError}</p>
@@ -72,7 +80,7 @@ const LoginPage = () => {
         </div>
         <button type='submit'>Submit</button>
       </form>
-    </>
+    </div>
   )
 }
 
