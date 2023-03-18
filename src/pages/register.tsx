@@ -32,7 +32,7 @@ type CreateUserInput = TypeOf<typeof createUserSchema>
 
 const RegisterPage = () => {
   const router = useRouter()
-  const [registrationError, setRegistrationError] = useState(null)
+  const [registrationError, setRegistrationError] = useState<string | null>(null)
   const {
     register,
     formState: { errors },
@@ -49,8 +49,15 @@ const RegisterPage = () => {
     } catch (error) {
       console.log('onSubmit error', error)
       // onSubmit error AxiosError {message: 'Unsupported protocol localhost:', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, stack: 'AxiosError: Unsupported protocol localhost:\n    at…dules/react-hook-form/dist/index.esm.mjs:2028:19)'}
-      setRegistrationError(error.message) // ! 'error' is of type 'unknown'.ts(18046)
+      // setRegistrationError(error.message) // ! 'error' is of type 'unknown'.ts(18046)
       // ! offline server -> Unsupported protocol localhost: // Network Error // Request failed with status code 400
+      if (axios.isAxiosError(error)) {
+        setRegistrationError(error.message) // ! Argument of type 'string' is not assignable to parameter of type 'SetStateAction<null>'.
+        console.log('onSubmit error.status', error.status)
+        console.log('onSubmit error.response', error.response)
+      } else {
+        console.log('onSubmit error', error)
+      }
     }
   }
 

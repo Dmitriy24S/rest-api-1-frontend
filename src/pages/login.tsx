@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -19,7 +19,7 @@ type CreateSessionInput = TypeOf<typeof createSessionSchema>
 
 const LoginPage = () => {
   const router = useRouter()
-  const [loginError, setLoginError] = useState(null)
+  const [loginError, setLoginError] = useState<string | null>(null)
   const {
     register,
     formState: { errors },
@@ -36,10 +36,16 @@ const LoginPage = () => {
       })
       router.push('/')
     } catch (error) {
-      console.log('onSubmit error', error)
       // onSubmit error AxiosError {message: 'Unsupported protocol localhost:', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, stack: 'AxiosError: Unsupported protocol localhost:\n    at…dules/react-hook-form/dist/index.esm.mjs:2028:19)'}
-      setLoginError(error.message) // ! 'error' is of type 'unknown'.ts(18046)
+      // setLoginError(error.message) // ! 'error' is of type 'unknown'.ts(18046)
       // ! offline server -> Unsupported protocol localhost: // Network Error // Request failed with status code 400
+      if (axios.isAxiosError(error)) {
+        setLoginError(error.message)
+        console.log('onSubmit error.status', error.status)
+        console.log('onSubmit error.response', error.response)
+      } else {
+        console.log('onSubmit error', error)
+      }
     }
   }
 
