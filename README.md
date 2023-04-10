@@ -1,6 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Rest API - Frontend
+
+![Design preview for Rest API - Frontend](./design-preview/design-preview.png)
+
+## Welcome
+
+Rest API - Frontend. Created with NextJS, CSS, axios, swr, react hook form, zod, Google OAuth
+[Live Demo](https://rest-api-1-frontend.vercel.app/) 👈
 
 ## Getting Started
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, run the development server:
 
